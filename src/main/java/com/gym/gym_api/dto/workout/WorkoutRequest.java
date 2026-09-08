@@ -1,15 +1,16 @@
 package com.gym.gym_api.dto.workout;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class WorkoutRequest {
-
-    @NotNull
-    private Long userId;
 
     @NotBlank
     @Size(max = 100)
@@ -18,19 +19,15 @@ public class WorkoutRequest {
     @NotNull
     private LocalDate workoutDate;
 
-    @NotEmpty
-    @Valid
-    private List<WorkoutExerciseRequest> exercises;
-
     @NotNull
     @Min(1)
     private Integer durationMinutes;
 
-    public WorkoutRequest() {
-    }
+    @NotEmpty
+    @Valid
+    private List<WorkoutExerciseRequest> exercises;
 
-    public Long getUserId() {
-        return userId;
+    public WorkoutRequest() {
     }
 
     public String getName() {
@@ -41,11 +38,11 @@ public class WorkoutRequest {
         return workoutDate;
     }
 
-    public List<WorkoutExerciseRequest> getExercises() {
-        return exercises;
-    }
-
     public Integer getDurationMinutes() {
         return durationMinutes;
+    }
+
+    public List<WorkoutExerciseRequest> getExercises() {
+        return exercises;
     }
 }
