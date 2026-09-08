@@ -65,4 +65,12 @@ public class WorkoutController {
     ) {
         workoutService.deleteWorkout(id, authentication);
     }
+
+    @PatchMapping("/{id}/finish")
+    public WorkoutResponse finishWorkout(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        return workoutService.finishWorkout(id, authentication);
+    }
 }

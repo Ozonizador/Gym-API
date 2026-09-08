@@ -12,6 +12,7 @@ public class WorkoutResponse {
     private LocalDate workoutDate;
     private Integer durationMinutes;
     private LocalDateTime createdAt;
+    private boolean finished;
     private List<WorkoutExerciseResponse> exercises;
 
     public WorkoutResponse() {
@@ -24,6 +25,7 @@ public class WorkoutResponse {
             LocalDate workoutDate,
             Integer durationMinutes,
             LocalDateTime createdAt,
+            boolean finished,
             List<WorkoutExerciseResponse> exercises
     ) {
         this.id = id;
@@ -32,6 +34,7 @@ public class WorkoutResponse {
         this.workoutDate = workoutDate;
         this.durationMinutes = durationMinutes;
         this.createdAt = createdAt;
+        this.finished = finished;
         this.exercises = exercises;
     }
 
@@ -61,5 +64,9 @@ public class WorkoutResponse {
 
     public List<WorkoutExerciseResponse> getExercises() {
         return exercises;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }

@@ -222,7 +222,31 @@ public class WorkoutService {
                 workout.getWorkoutDate(),
                 workout.getDurationMinutes(),
                 workout.getCreatedAt(),
+                workout.isFinished(),
                 exerciseResponses
         );
+    }
+
+    public WorkoutResponse finishWorkout(
+            Long id,
+            Authentication authentication
+    ) {
+
+        User user = getAuthenticatedUser(authentication);
+
+        Workout workout = workoutRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Workout not found: " + id
+                        )
+                );
+
+        verifyOwnership(workout, user);
+
+        workout.setFinished(true);
+
+        Workout finishedWorkout = workoutRepository.save(workout);
+
+        return toResponse(finishedWorkout);
     }
 }

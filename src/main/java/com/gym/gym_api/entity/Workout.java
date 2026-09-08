@@ -31,6 +31,9 @@ public class Workout {
     @Column(name = "duration_minutes")
     private Integer durationMinutes;
 
+    @Column(nullable = false)
+    private boolean finished;
+
     @OneToMany(
             mappedBy = "workout",
             cascade = CascadeType.ALL,
@@ -91,5 +94,13 @@ public class Workout {
 
     public void setDurationMinutes(Integer durationMinutes) {
         this.durationMinutes = durationMinutes;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }
