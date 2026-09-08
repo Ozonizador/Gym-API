@@ -1,4 +1,4 @@
-package com.gym.gym_api.dto.workout;
+package com.gym.gym_api.dto.workout.template;
 
 import java.time.LocalDateTime;
 import java.util.List;

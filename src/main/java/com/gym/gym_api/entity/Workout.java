@@ -19,6 +19,10 @@ public class Workout {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workout_template_id")
+    private WorkoutTemplate workoutTemplate;
+
     @Column(nullable = false, length = 100)
     private String name;
 
@@ -124,5 +128,13 @@ public class Workout {
 
     public void setFinishedAt(LocalDateTime finishedAt) {
         this.finishedAt = finishedAt;
+    }
+
+    public WorkoutTemplate getWorkoutTemplate() {
+        return workoutTemplate;
+    }
+
+    public void setWorkoutTemplate(WorkoutTemplate workoutTemplate) {
+        this.workoutTemplate = workoutTemplate;
     }
 }

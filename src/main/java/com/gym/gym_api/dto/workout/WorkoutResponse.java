@@ -9,6 +9,8 @@ public class WorkoutResponse {
     private Long id;
     private Long userId;
     private String name;
+    private Long workoutTemplateId;
+    private String workoutTemplateName;
     private LocalDate workoutDate;
     private Integer durationSeconds;
     private LocalDateTime startedAt;
@@ -23,6 +25,8 @@ public class WorkoutResponse {
     public WorkoutResponse(
             Long id,
             Long userId,
+            Long workoutTemplateId,
+            String workoutTemplateName,
             String name,
             LocalDate workoutDate,
             Integer durationSeconds,
@@ -34,6 +38,8 @@ public class WorkoutResponse {
     ) {
         this.id = id;
         this.userId = userId;
+        this.workoutTemplateId = workoutTemplateId;
+        this.workoutTemplateName = workoutTemplateName;
         this.name = name;
         this.workoutDate = workoutDate;
         this.durationSeconds = durationSeconds;
@@ -82,5 +88,13 @@ public class WorkoutResponse {
 
     public List<WorkoutExerciseResponse> getExercises() {
         return exercises;
+    }
+
+    public Long getWorkoutTemplateId() {
+        return workoutTemplateId;
+    }
+
+    public String getWorkoutTemplateName() {
+        return workoutTemplateName;
     }
 }

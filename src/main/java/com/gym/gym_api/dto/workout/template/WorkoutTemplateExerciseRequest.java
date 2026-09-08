@@ -1,4 +1,4 @@
-package com.gym.gym_api.dto.workout;
+package com.gym.gym_api.dto.workout.template;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

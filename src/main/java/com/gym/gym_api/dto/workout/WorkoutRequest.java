@@ -23,6 +23,8 @@ public class WorkoutRequest {
     @Valid
     private List<WorkoutExerciseRequest> exercises;
 
+    private Long workoutTemplateId;
+
     public WorkoutRequest() {
     }
 
@@ -36,5 +38,9 @@ public class WorkoutRequest {
 
     public List<WorkoutExerciseRequest> getExercises() {
         return exercises;
+    }
+
+    public Long getWorkoutTemplateId() {
+        return workoutTemplateId;
     }
 }
