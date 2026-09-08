@@ -19,8 +19,8 @@ public class Schedule {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "workout_id", nullable = false)
-    private Workout workout;
+    @JoinColumn(name = "workout_template_id", nullable = false)
+    private WorkoutTemplate workoutTemplate;
 
     @Column(name = "scheduled_date", nullable = false)
     private LocalDate scheduledDate;
@@ -45,8 +45,8 @@ public class Schedule {
         return user;
     }
 
-    public Workout getWorkout() {
-        return workout;
+    public WorkoutTemplate getWorkoutTemplate() {
+        return workoutTemplate;
     }
 
     public LocalDate getScheduledDate() {
@@ -69,8 +69,8 @@ public class Schedule {
         this.user = user;
     }
 
-    public void setWorkout(Workout workout) {
-        this.workout = workout;
+    public void setWorkoutTemplate(WorkoutTemplate workoutTemplate) {
+        this.workoutTemplate = workoutTemplate;
     }
 
     public void setScheduledDate(LocalDate scheduledDate) {

@@ -195,12 +195,11 @@ Planned features include:
 - [ ] Workout reports & statistics
 - [ ] Progress tracking
 - [ ] Unit tests
-- [ ] Integration tests
-- [ ] API integration tests with PostgreSQL
-- [ ] CI/CD pipeline
-- [ ] Dockerized application
+- [ ] Integration/API tests
+- [ ] Dockerize the application
+- [ ] CI/CD pipeline with GitHub Actions
+- [ ] Health checks & monitoring
 - [ ] Production deployment
-- [ ] Health checks & application monitoring
 
 ## Project Goals
 
