@@ -1,4 +1,4 @@
-package com.gym.gym_api.dto.workout;
+package com.gym.gym_api.dto.workout.template;
 
 public class WorkoutTemplateExerciseResponse {
 

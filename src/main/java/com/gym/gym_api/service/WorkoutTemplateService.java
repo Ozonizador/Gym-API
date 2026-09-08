@@ -1,9 +1,9 @@
 package com.gym.gym_api.service;
 
-import com.gym.gym_api.dto.workout.WorkoutTemplateExerciseRequest;
-import com.gym.gym_api.dto.workout.WorkoutTemplateExerciseResponse;
-import com.gym.gym_api.dto.workout.WorkoutTemplateRequest;
-import com.gym.gym_api.dto.workout.WorkoutTemplateResponse;
+import com.gym.gym_api.dto.workout.template.WorkoutTemplateExerciseRequest;
+import com.gym.gym_api.dto.workout.template.WorkoutTemplateExerciseResponse;
+import com.gym.gym_api.dto.workout.template.WorkoutTemplateRequest;
+import com.gym.gym_api.dto.workout.template.WorkoutTemplateResponse;
 import com.gym.gym_api.entity.Exercise;
 import com.gym.gym_api.entity.User;
 import com.gym.gym_api.entity.WorkoutTemplate;

@@ -1,7 +1,7 @@
 package com.gym.gym_api.controller;
 
-import com.gym.gym_api.dto.workout.WorkoutTemplateRequest;
-import com.gym.gym_api.dto.workout.WorkoutTemplateResponse;
+import com.gym.gym_api.dto.workout.template.WorkoutTemplateRequest;
+import com.gym.gym_api.dto.workout.template.WorkoutTemplateResponse;
 import com.gym.gym_api.service.WorkoutTemplateService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
