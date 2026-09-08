@@ -190,14 +190,17 @@ This ensures that the JPA model matches the database schema without allowing Hib
 
 Planned features include:
 
-* [ ] Workout scheduling
-* [ ] Workout history endpoints
-* [ ] Workout reports
-* [ ] Progress tracking
-* [ ] Unit tests
-* [ ] Integration tests
-* [ ] CI/CD
-* [ ] Production deployment
+- [ ] Workout scheduling
+- [ ] Workout history
+- [ ] Workout reports & statistics
+- [ ] Progress tracking
+- [ ] Unit tests
+- [ ] Integration tests
+- [ ] API integration tests with PostgreSQL
+- [ ] CI/CD pipeline
+- [ ] Dockerized application
+- [ ] Production deployment
+- [ ] Health checks & application monitoring
 
 ## Project Goals
 
