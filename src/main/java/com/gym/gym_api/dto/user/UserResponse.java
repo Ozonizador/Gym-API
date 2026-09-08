@@ -1,4 +1,4 @@
-package com.gym.gym_api.dto;
+package com.gym.gym_api.dto.user;
 
 import java.time.LocalDateTime;
 

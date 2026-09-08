@@ -1,7 +1,7 @@
 package com.gym.gym_api.controller;
 
-import com.gym.gym_api.dto.UserRequest;
-import com.gym.gym_api.dto.UserResponse;
+import com.gym.gym_api.dto.user.UserRequest;
+import com.gym.gym_api.dto.user.UserResponse;
 import com.gym.gym_api.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

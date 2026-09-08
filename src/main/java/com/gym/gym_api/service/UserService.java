@@ -1,11 +1,8 @@
 package com.gym.gym_api.service;
 
-import com.gym.gym_api.dto.ExerciseResponse;
-import com.gym.gym_api.dto.UserRequest;
-import com.gym.gym_api.dto.UserResponse;
-import com.gym.gym_api.entity.Exercise;
+import com.gym.gym_api.dto.user.UserRequest;
+import com.gym.gym_api.dto.user.UserResponse;
 import com.gym.gym_api.entity.User;
-import com.gym.gym_api.exception.ResourceNotFoundException;
 import com.gym.gym_api.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

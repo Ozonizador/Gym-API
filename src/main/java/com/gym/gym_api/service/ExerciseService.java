@@ -1,9 +1,9 @@
 package com.gym.gym_api.service;
 
-import com.gym.gym_api.dto.ExerciseMuscleGroupRequest;
-import com.gym.gym_api.dto.ExerciseMuscleGroupResponse;
-import com.gym.gym_api.dto.ExerciseRequest;
-import com.gym.gym_api.dto.ExerciseResponse;
+import com.gym.gym_api.dto.exercise.ExerciseMuscleGroupRequest;
+import com.gym.gym_api.dto.exercise.ExerciseMuscleGroupResponse;
+import com.gym.gym_api.dto.exercise.ExerciseRequest;
+import com.gym.gym_api.dto.exercise.ExerciseResponse;
 import com.gym.gym_api.entity.Exercise;
 import com.gym.gym_api.entity.ExerciseMuscleGroup;
 import com.gym.gym_api.entity.MuscleGroup;

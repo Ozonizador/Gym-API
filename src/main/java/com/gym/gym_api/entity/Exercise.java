@@ -30,6 +30,9 @@ public class Exercise {
     )
     private List<ExerciseMuscleGroup> muscleGroups = new ArrayList<>();
 
+    @OneToMany(mappedBy = "exercise")
+    private List<WorkoutExercise> workoutExercises = new ArrayList<>();
+
     public Exercise() {
     }
 
@@ -67,5 +70,13 @@ public class Exercise {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<WorkoutExercise> getWorkoutExercises() {
+        return workoutExercises;
+    }
+
+    public void setWorkoutExercises(List<WorkoutExercise> workoutExercises) {
+        this.workoutExercises = workoutExercises;
     }
 }

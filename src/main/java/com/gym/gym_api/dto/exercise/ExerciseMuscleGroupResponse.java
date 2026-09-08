@@ -1,4 +1,4 @@
-package com.gym.gym_api.dto;
+package com.gym.gym_api.dto.exercise;
 
 import com.gym.gym_api.entity.MuscleRole;
 
