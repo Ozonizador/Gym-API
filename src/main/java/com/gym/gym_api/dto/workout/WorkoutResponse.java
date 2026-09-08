@@ -10,7 +10,9 @@ public class WorkoutResponse {
     private Long userId;
     private String name;
     private LocalDate workoutDate;
-    private Integer durationMinutes;
+    private Integer durationSeconds;
+    private LocalDateTime startedAt;
+    private LocalDateTime finishedAt;
     private LocalDateTime createdAt;
     private boolean finished;
     private List<WorkoutExerciseResponse> exercises;
@@ -23,7 +25,9 @@ public class WorkoutResponse {
             Long userId,
             String name,
             LocalDate workoutDate,
-            Integer durationMinutes,
+            Integer durationSeconds,
+            LocalDateTime startedAt,
+            LocalDateTime finishedAt,
             LocalDateTime createdAt,
             boolean finished,
             List<WorkoutExerciseResponse> exercises
@@ -32,7 +36,9 @@ public class WorkoutResponse {
         this.userId = userId;
         this.name = name;
         this.workoutDate = workoutDate;
-        this.durationMinutes = durationMinutes;
+        this.durationSeconds = durationSeconds;
+        this.startedAt = startedAt;
+        this.finishedAt = finishedAt;
         this.createdAt = createdAt;
         this.finished = finished;
         this.exercises = exercises;
@@ -54,19 +60,27 @@ public class WorkoutResponse {
         return workoutDate;
     }
 
-    public Integer getDurationMinutes() {
-        return durationMinutes;
+    public Integer getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public LocalDateTime getStartedAt() {
+        return startedAt;
+    }
+
+    public LocalDateTime getFinishedAt() {
+        return finishedAt;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public List<WorkoutExerciseResponse> getExercises() {
-        return exercises;
-    }
-
     public boolean isFinished() {
         return finished;
+    }
+
+    public List<WorkoutExerciseResponse> getExercises() {
+        return exercises;
     }
 }

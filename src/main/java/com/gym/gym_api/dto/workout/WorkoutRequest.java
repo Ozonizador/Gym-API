@@ -19,10 +19,6 @@ public class WorkoutRequest {
     @NotNull
     private LocalDate workoutDate;
 
-    @NotNull
-    @Min(1)
-    private Integer durationMinutes;
-
     @NotEmpty
     @Valid
     private List<WorkoutExerciseRequest> exercises;
@@ -36,10 +32,6 @@ public class WorkoutRequest {
 
     public LocalDate getWorkoutDate() {
         return workoutDate;
-    }
-
-    public Integer getDurationMinutes() {
-        return durationMinutes;
     }
 
     public List<WorkoutExerciseRequest> getExercises() {

@@ -15,6 +15,7 @@ import com.gym.gym_api.repository.WorkoutRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,10 @@ public class WorkoutService {
         workout.setUser(user);
         workout.setName(request.getName());
         workout.setWorkoutDate(request.getWorkoutDate());
-        workout.setDurationMinutes(request.getDurationMinutes());
+        workout.setStartedAt(LocalDateTime.now());
+        workout.setFinishedAt(null);
+        workout.setFinished(false);
+        workout.setDurationSeconds(null);
         workout.setCreatedAt(LocalDateTime.now());
 
         workout.setExercises(
@@ -112,7 +116,6 @@ public class WorkoutService {
 
         workout.setName(request.getName());
         workout.setWorkoutDate(request.getWorkoutDate());
-        workout.setDurationMinutes(request.getDurationMinutes());
 
         workout.getExercises().clear();
 
@@ -220,7 +223,9 @@ public class WorkoutService {
                 workout.getUser().getId(),
                 workout.getName(),
                 workout.getWorkoutDate(),
-                workout.getDurationMinutes(),
+                workout.getDurationSeconds(),
+                workout.getStartedAt(),
+                workout.getFinishedAt(),
                 workout.getCreatedAt(),
                 workout.isFinished(),
                 exerciseResponses
@@ -243,7 +248,26 @@ public class WorkoutService {
 
         verifyOwnership(workout, user);
 
+        if (workout.isFinished()) {
+            throw new IllegalArgumentException(
+                    "Workout is already finished"
+            );
+        }
+
+        LocalDateTime finishedAt = LocalDateTime.now();
+
+        int durationSeconds = Math.toIntExact(Duration.between(
+                workout.getStartedAt(),
+                finishedAt
+        ).toSeconds());
+
+        if (durationSeconds <= 0) {
+            durationSeconds = 1;
+        }
+
+        workout.setFinishedAt(finishedAt);
         workout.setFinished(true);
+        workout.setDurationSeconds((int) durationSeconds);
 
         Workout finishedWorkout = workoutRepository.save(workout);
 
