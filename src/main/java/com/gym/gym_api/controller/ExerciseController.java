@@ -24,11 +24,32 @@ public class ExerciseController {
         return exerciseService.getAllExercises();
     }
 
+    @GetMapping("/{id}")
+    public ExerciseResponse getExerciseById(
+            @PathVariable Long id
+    ) {
+        return exerciseService.getExerciseById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ExerciseResponse createExercise(
             @Valid @RequestBody ExerciseRequest request
     ) {
         return exerciseService.createExercise(request);
+    }
+
+    @PutMapping("/{id}")
+    public ExerciseResponse updateExercise(
+            @PathVariable Long id,
+            @Valid @RequestBody ExerciseRequest request
+    ) {
+        return exerciseService.updateExercise(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteExercise(@PathVariable Long id) {
+        exerciseService.deleteExercise(id);
     }
 }
