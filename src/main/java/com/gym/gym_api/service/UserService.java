@@ -38,10 +38,17 @@ public class UserService {
 
     public UserResponse createUser(UserRequest request) {
 
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
         String passwordHash = passwordEncoder.encode(request.getPassword());
 
         User user = new User();
-        
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
