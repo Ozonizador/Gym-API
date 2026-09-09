@@ -1,13 +1,12 @@
 package com.gym.gym_api.dto.workout;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkoutRequest {
@@ -19,9 +18,8 @@ public class WorkoutRequest {
     @NotNull
     private LocalDate workoutDate;
 
-    @NotEmpty
     @Valid
-    private List<WorkoutExerciseRequest> exercises;
+    private List<WorkoutExerciseRequest> exercises = new ArrayList<>();
 
     private Long workoutTemplateId;
 

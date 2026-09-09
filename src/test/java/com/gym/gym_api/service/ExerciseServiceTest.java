@@ -7,24 +7,25 @@ import com.gym.gym_api.entity.Exercise;
 import com.gym.gym_api.entity.ExerciseMuscleGroup;
 import com.gym.gym_api.entity.MuscleGroup;
 import com.gym.gym_api.entity.MuscleRole;
+import com.gym.gym_api.exception.ResourceNotFoundException;
 import com.gym.gym_api.repository.ExerciseRepository;
 import com.gym.gym_api.repository.MuscleGroupRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-import com.gym.gym_api.exception.ResourceNotFoundException;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Optional;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ExerciseServiceTest {
