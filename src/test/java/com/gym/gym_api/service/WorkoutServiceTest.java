@@ -1,10 +1,10 @@
 package com.gym.gym_api.service;
 
-import com.gym.gym_api.dto.workout.WorkoutResponse;
 import com.gym.gym_api.dto.workout.WorkoutRequest;
-import com.gym.gym_api.entity.WorkoutTemplate;
+import com.gym.gym_api.dto.workout.WorkoutResponse;
 import com.gym.gym_api.entity.User;
 import com.gym.gym_api.entity.Workout;
+import com.gym.gym_api.entity.WorkoutTemplate;
 import com.gym.gym_api.exception.ResourceNotFoundException;
 import com.gym.gym_api.repository.ExerciseRepository;
 import com.gym.gym_api.repository.UserRepository;
@@ -15,19 +15,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class WorkoutServiceTest {
@@ -48,7 +51,8 @@ class WorkoutServiceTest {
 
     @BeforeEach
     void setUp() {
-        workoutService = new WorkoutService(workoutRepository, userRepository, exerciseRepository, workoutTemplateRepository);
+        workoutService = new WorkoutService(workoutRepository, userRepository, exerciseRepository,
+                workoutTemplateRepository);
     }
 
     @Test
@@ -72,7 +76,8 @@ class WorkoutServiceTest {
 
         when(workoutRepository.findById(10L)).thenReturn(Optional.of(workout));
 
-        assertThrows(ResourceNotFoundException.class, () -> workoutService.getWorkoutById(10L, authentication));
+        assertThrows(ResourceNotFoundException.class,
+                () -> workoutService.getWorkoutById(10L, authentication));
     }
 
     @Test
@@ -132,7 +137,8 @@ class WorkoutServiceTest {
 
         when(workoutTemplateRepository.findById(3L)).thenReturn(Optional.of(template));
 
-        assertThrows(ResourceNotFoundException.class, () -> workoutService.createWorkout(request, authentication));
+        assertThrows(ResourceNotFoundException.class,
+                () -> workoutService.createWorkout(request, authentication));
     }
 
     @Test
@@ -178,7 +184,8 @@ class WorkoutServiceTest {
         when(savedWorkout.isFinished()).thenReturn(false);
         when(savedWorkout.getExercises()).thenReturn(List.of());
 
-        when(workoutRepository.save(org.mockito.ArgumentMatchers.any(Workout.class))).thenReturn(savedWorkout);
+        when(workoutRepository.save(org.mockito.ArgumentMatchers.any(Workout.class))).thenReturn(
+                savedWorkout);
 
         WorkoutResponse response = workoutService.createWorkout(request, authentication);
 
@@ -249,7 +256,8 @@ class WorkoutServiceTest {
 
         when(workoutRepository.findById(10L)).thenReturn(Optional.of(workout));
 
-        assertThrows(IllegalArgumentException.class, () -> workoutService.finishWorkout(10L, authentication));
+        assertThrows(IllegalArgumentException.class,
+                () -> workoutService.finishWorkout(10L, authentication));
     }
 
     @Test
@@ -288,7 +296,8 @@ class WorkoutServiceTest {
         when(savedWorkout.isFinished()).thenReturn(false);
         when(savedWorkout.getExercises()).thenReturn(List.of());
 
-        when(workoutRepository.save(org.mockito.ArgumentMatchers.any(Workout.class))).thenReturn(savedWorkout);
+        when(workoutRepository.save(org.mockito.ArgumentMatchers.any(Workout.class))).thenReturn(
+                savedWorkout);
 
         WorkoutResponse response = workoutService.createWorkout(request, authentication);
 
@@ -325,9 +334,14 @@ class WorkoutServiceTest {
 
         when(userRepository.findByUsername("john")).thenReturn(Optional.of(user));
 
-        when(workoutRepository.findWorkoutHistory(org.mockito.ArgumentMatchers.eq(1L), org.mockito.ArgumentMatchers.eq(3L), org.mockito.ArgumentMatchers.eq(1L), org.mockito.ArgumentMatchers.eq(LocalDate.of(2026, 9, 1)), org.mockito.ArgumentMatchers.eq(LocalDate.of(2026, 9, 30)), org.mockito.ArgumentMatchers.any(Pageable.class))).thenReturn(workoutPage);
+        when(workoutRepository.findWorkoutHistory(org.mockito.ArgumentMatchers.eq(1L),
+                org.mockito.ArgumentMatchers.eq(3L), org.mockito.ArgumentMatchers.eq(1L),
+                org.mockito.ArgumentMatchers.eq(LocalDate.of(2026, 9, 1)),
+                org.mockito.ArgumentMatchers.eq(LocalDate.of(2026, 9, 30)),
+                org.mockito.ArgumentMatchers.any(Pageable.class))).thenReturn(workoutPage);
 
-        var result = workoutService.getWorkoutHistory(3L, 1L, LocalDate.of(2026, 9, 1), LocalDate.of(2026, 9, 30), 0, 10, authentication);
+        var result = workoutService.getWorkoutHistory(3L, 1L, LocalDate.of(2026, 9, 1),
+                LocalDate.of(2026, 9, 30), 0, 10, authentication);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getTotalPages());
