@@ -3,11 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - main
-      - github-actions-ci
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   test:
