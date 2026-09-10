@@ -27,9 +27,9 @@ services:
         condition: service_healthy
     environment:
       DB_HOST: postgres
-      POSTGRES_DB: gym_db
-      POSTGRES_USER: gym
-      POSTGRES_PASSWORD: gym_password
+      POSTGRES_DB: ${POSTGRES_DB:-gym_db}
+      POSTGRES_USER: ${POSTGRES_USER:-gym}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gym_password}
       JWT_SECRET: ${JWT_SECRET}
     ports:
       - "8090:8090"
