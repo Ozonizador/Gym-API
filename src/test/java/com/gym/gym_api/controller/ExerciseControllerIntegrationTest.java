@@ -1,8 +1,10 @@
 package com.gym.gym_api.controller;
 
 import com.gym.gym_api.entity.Exercise;
+import com.gym.gym_api.entity.MuscleGroup;
 import com.gym.gym_api.entity.User;
 import com.gym.gym_api.repository.ExerciseRepository;
+import com.gym.gym_api.repository.MuscleGroupRepository;
 import com.gym.gym_api.repository.UserRepository;
 import com.gym.gym_api.security.JwtService;
 import org.junit.jupiter.api.Test;
@@ -44,6 +46,9 @@ class ExerciseControllerIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MuscleGroupRepository muscleGroupRepository;
 
     @Test
     void getAllExercises_shouldReturnExercises()
@@ -452,5 +457,167 @@ class ExerciseControllerIntegrationTest {
         return jwtService.generateToken(
                 savedUser.getUsername()
         );
+    }
+
+    @Test
+    void createExercise_shouldCreateExerciseWithMuscleGroups()
+            throws Exception {
+
+        MuscleGroup chest = new MuscleGroup();
+        chest.setName("Integration Chest");
+        chest = muscleGroupRepository.save(chest);
+
+        MuscleGroup triceps = new MuscleGroup();
+        triceps.setName("Integration Triceps");
+        triceps = muscleGroupRepository.save(triceps);
+
+        String token = createToken("exercise-muscle-create-user");
+
+        String requestBody = """
+                {
+                    "name": "Integration Bench With Muscles",
+                    "description": "Bench press with muscle groups",
+                    "muscleGroups": [
+                        {
+                            "muscleGroupId": %d,
+                            "role": "PRIMARY"
+                        },
+                        {
+                            "muscleGroupId": %d,
+                            "role": "SECONDARY"
+                        }
+                    ]
+                }
+                """.formatted(
+                chest.getId(),
+                triceps.getId()
+        );
+
+        mockMvc.perform(
+                        post("/api/exercises")
+                                .header(
+                                        "Authorization",
+                                        "Bearer " + token
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(
+                        jsonPath("$.name")
+                                .value("Integration Bench With Muscles")
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups")
+                                .isArray()
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups.length()")
+                                .value(2)
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[0].muscleGroupId")
+                                .value(chest.getId())
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[0].muscleGroupName")
+                                .value("Integration Chest")
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[0].role")
+                                .value("PRIMARY")
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[1].muscleGroupId")
+                                .value(triceps.getId())
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[1].muscleGroupName")
+                                .value("Integration Triceps")
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[1].role")
+                                .value("SECONDARY")
+                );
+    }
+
+    @Test
+    void updateExercise_shouldReplaceMuscleGroups()
+            throws Exception {
+
+        MuscleGroup chest = new MuscleGroup();
+        chest.setName("Integration Update Chest");
+        chest = muscleGroupRepository.save(chest);
+
+        MuscleGroup back = new MuscleGroup();
+        back.setName("Integration Update Back");
+        back = muscleGroupRepository.save(back);
+
+        Exercise exercise = new Exercise();
+        exercise.setName("Exercise Before Muscle Update");
+        exercise.setDescription("Before update");
+        exercise.setCreatedAt(LocalDateTime.now());
+
+        Exercise savedExercise =
+                exerciseRepository.save(exercise);
+
+        String token = createToken("exercise-muscle-update-user");
+
+        String requestBody = """
+                {
+                    "name": "Exercise After Muscle Update",
+                    "description": "After update",
+                    "muscleGroups": [
+                        {
+                            "muscleGroupId": %d,
+                            "role": "PRIMARY"
+                        },
+                        {
+                            "muscleGroupId": %d,
+                            "role": "SECONDARY"
+                        }
+                    ]
+                }
+                """.formatted(
+                back.getId(),
+                chest.getId()
+        );
+
+        mockMvc.perform(
+                        put("/api/exercises/" + savedExercise.getId())
+                                .header(
+                                        "Authorization",
+                                        "Bearer " + token
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestBody)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(
+                        jsonPath("$.name")
+                                .value("Exercise After Muscle Update")
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups.length()")
+                                .value(2)
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[0].muscleGroupId")
+                                .value(back.getId())
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[0].role")
+                                .value("PRIMARY")
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[1].muscleGroupId")
+                                .value(chest.getId())
+                )
+                .andExpect(
+                        jsonPath("$.muscleGroups[1].role")
+                                .value("SECONDARY")
+                );
     }
 }

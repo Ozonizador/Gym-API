@@ -321,4 +321,119 @@ class ExerciseServiceTest {
                 response.getName()
         );
     }
+
+    @Test
+    void createExercise_shouldCreateExerciseWithMuscleGroupRelationship() {
+
+        ExerciseRequest request = mock(ExerciseRequest.class);
+        ExerciseMuscleGroupRequest muscleGroupRequest =
+                mock(ExerciseMuscleGroupRequest.class);
+
+        MuscleGroup muscleGroup = mock(MuscleGroup.class);
+        ExerciseMuscleGroup relationship =
+                mock(ExerciseMuscleGroup.class);
+
+        Exercise savedExercise = mock(Exercise.class);
+
+        when(request.getName())
+                .thenReturn("Bench Press");
+
+        when(request.getDescription())
+                .thenReturn("Barbell chest press");
+
+        when(request.getMuscleGroups())
+                .thenReturn(List.of(muscleGroupRequest));
+
+        when(muscleGroupRequest.getMuscleGroupId())
+                .thenReturn(1L);
+
+        when(muscleGroupRequest.getRole())
+                .thenReturn(MuscleRole.PRIMARY);
+
+        when(exerciseRepository.existsByName("Bench Press"))
+                .thenReturn(false);
+
+        when(muscleGroupRepository.findById(1L))
+                .thenReturn(Optional.of(muscleGroup));
+
+        when(savedExercise.getId())
+                .thenReturn(10L);
+
+        when(savedExercise.getName())
+                .thenReturn("Bench Press");
+
+        when(savedExercise.getDescription())
+                .thenReturn("Barbell chest press");
+
+        when(savedExercise.getMuscleGroups())
+                .thenReturn(List.of(relationship));
+
+        when(relationship.getMuscleGroup())
+                .thenReturn(muscleGroup);
+
+        when(relationship.getRole())
+                .thenReturn(MuscleRole.PRIMARY);
+
+        when(muscleGroup.getId())
+                .thenReturn(1L);
+
+        when(exerciseRepository.save(any(Exercise.class)))
+                .thenReturn(savedExercise);
+
+        ExerciseResponse response =
+                exerciseService.createExercise(request);
+
+        assertEquals(1, response.getMuscleGroups().size());
+        assertEquals(
+                1L,
+                response.getMuscleGroups()
+                        .get(0)
+                        .getMuscleGroupId()
+        );
+        assertEquals(
+                MuscleRole.PRIMARY,
+                response.getMuscleGroups()
+                        .get(0)
+                        .getRole()
+        );
+    }
+
+    @Test
+    void updateExercise_shouldRejectMissingMuscleGroup() {
+
+        ExerciseRequest request = mock(ExerciseRequest.class);
+        ExerciseMuscleGroupRequest muscleGroupRequest =
+                mock(ExerciseMuscleGroupRequest.class);
+
+        Exercise exercise = mock(Exercise.class);
+
+        when(exerciseRepository.findById(10L))
+                .thenReturn(Optional.of(exercise));
+
+        when(request.getName())
+                .thenReturn("Bench Press");
+
+        when(request.getDescription())
+                .thenReturn("Barbell chest press");
+
+        when(request.getMuscleGroups())
+                .thenReturn(List.of(muscleGroupRequest));
+
+        when(muscleGroupRequest.getMuscleGroupId())
+                .thenReturn(999L);
+
+        when(exercise.getName())
+                .thenReturn("Bench Press");
+
+        when(exercise.getMuscleGroups())
+                .thenReturn(new ArrayList<>());
+
+        when(muscleGroupRepository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> exerciseService.updateExercise(10L, request)
+        );
+    }
 }
