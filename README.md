@@ -196,11 +196,11 @@ Planned features include:
 
 * [x] Workout scheduling
 * [x] Workout history
-* [ ] Progress tracking
 * [x] Unit tests
 * [x] Integration/API tests
-* [ ] Dockerize the application
-* [ ] CI/CD pipeline with GitHub Actions
+* [x] Dockerize the application
+* [x] CI/CD pipeline with GitHub Actions
+* [ ] Progress tracking
 * [ ] Health checks & monitoring
 * [ ] Production deployment
 
