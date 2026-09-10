@@ -19,8 +19,8 @@ public interface WorkoutRepository extends JpaRepository<Workout, Long> {
               AND w.finished = true
               AND (:templateId IS NULL OR w.workoutTemplate.id = :templateId)
               AND (:exerciseId IS NULL OR we.exercise.id = :exerciseId)
-              AND (:from IS NULL OR w.workoutDate >= :from)
-              AND (:to IS NULL OR w.workoutDate <= :to)
+              AND w.workoutDate >= COALESCE(:from, w.workoutDate)
+              AND w.workoutDate <= COALESCE(:to, w.workoutDate)
             ORDER BY w.workoutDate DESC, w.id DESC
             """)
     Page<Workout> findWorkoutHistory(

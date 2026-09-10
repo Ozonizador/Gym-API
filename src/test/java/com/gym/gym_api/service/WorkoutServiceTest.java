@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -377,6 +378,18 @@ class WorkoutServiceTest {
                         authentication
                 )
         );
+
+        verify(
+                workoutRepository,
+                never()
+        ).findWorkoutHistory(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(Pageable.class)
+        );
     }
 
     @Test
@@ -404,6 +417,18 @@ class WorkoutServiceTest {
                         authentication
                 )
         );
+
+        verify(
+                workoutRepository,
+                never()
+        ).findWorkoutHistory(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(Pageable.class)
+        );
     }
 
     @Test
@@ -424,12 +449,24 @@ class WorkoutServiceTest {
                 () -> workoutService.getWorkoutHistory(
                         null,
                         null,
-                        java.time.LocalDate.of(2026, 9, 30),
-                        java.time.LocalDate.of(2026, 9, 1),
+                        LocalDate.of(2026, 9, 30),
+                        LocalDate.of(2026, 9, 1),
                         0,
                         10,
                         authentication
                 )
+        );
+
+        verify(
+                workoutRepository,
+                never()
+        ).findWorkoutHistory(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(Pageable.class)
         );
     }
 }
