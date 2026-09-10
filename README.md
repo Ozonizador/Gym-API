@@ -1,8 +1,10 @@
 # Gym API
 
-A RESTful backend API for managing exercises, workout templates, and workout sessions, with JWT authentication and PostgreSQL persistence.
+A RESTful backend API for managing exercises, workout templates, and workout sessions, with JWT authentication and
+PostgreSQL persistence.
 
-Built as a backend-focused project using **Java 21** and **Spring Boot**, with an emphasis on clean architecture, secure resource ownership, relational data modelling, and API documentation.
+Built as a backend-focused project using **Java 21** and **Spring Boot**, with an emphasis on clean architecture, secure
+resource ownership, relational data modelling, and API documentation.
 
 ## Features
 
@@ -23,7 +25,7 @@ Built as a backend-focused project using **Java 21** and **Spring Boot**, with a
 ## Tech Stack
 
 | Technology        | Purpose                        |
-| ----------------- | ------------------------------ |
+|-------------------|--------------------------------|
 | Java 21           | Programming language           |
 | Spring Boot       | Backend framework              |
 | Spring Web        | REST API                       |
@@ -52,7 +54,8 @@ Repository
 PostgreSQL
 ```
 
-DTOs are used to separate the API layer from JPA entities, while centralized exception handling provides consistent API error responses.
+DTOs are used to separate the API layer from JPA entities, while centralized exception handling provides consistent API
+error responses.
 
 ## Workout Model
 
@@ -184,7 +187,8 @@ Hibernate is configured with:
 spring.jpa.hibernate.ddl-auto=validate
 ```
 
-This ensures that the JPA model matches the database schema without allowing Hibernate to automatically modify the database.
+This ensures that the JPA model matches the database schema without allowing Hibernate to automatically modify the
+database.
 
 ## Roadmap
 
@@ -192,15 +196,13 @@ Planned features include:
 
 * [x] Workout scheduling
 * [x] Workout history
-* [ ] Workout reports & statistics
 * [ ] Progress tracking
 * [x] Unit tests
-* [ ] Integration/API tests
+* [x] Integration/API tests
 * [ ] Dockerize the application
 * [ ] CI/CD pipeline with GitHub Actions
 * [ ] Health checks & monitoring
 * [ ] Production deployment
-
 
 ## Project Goals
 
