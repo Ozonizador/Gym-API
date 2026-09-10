@@ -1,16 +1,38 @@
 services:
-    postgres:
-      image: postgres:18
-      container_name: gym-postgres
-      restart: unless-stopped
-      environment:
-        POSTGRES_DB: gym_db
-        POSTGRES_USER: gym
-        POSTGRES_PASSWORD: gym_password
-      ports:
-        - "5432:5432"
-      volumes:
-        - postgres_data:/var/lib/postgresql
+  postgres:
+    image: postgres:18
+    container_name: gym-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: gym_db
+      POSTGRES_USER: gym
+      POSTGRES_PASSWORD: gym_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U gym -d gym_db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  app:
+    build: .
+    container_name: gym-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      POSTGRES_DB: gym_db
+      POSTGRES_USER: gym
+      POSTGRES_PASSWORD: gym_password
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8090:8090"
 
 volumes:
   postgres_data:
