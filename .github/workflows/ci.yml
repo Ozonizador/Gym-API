@@ -3,11 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - main
-      - github-actions-ci
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   test:
@@ -45,5 +44,5 @@ jobs:
           POSTGRES_DB: gym_db
           POSTGRES_USER: gym
           POSTGRES_PASSWORD: gym_password
-          JWT_SECRET: github-actions-test-secret
+          JWT_SECRET: github-actions-test-secret-0123456789-abcdef0123456789
         run: ./mvnw test
