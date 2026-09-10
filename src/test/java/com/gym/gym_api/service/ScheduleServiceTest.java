@@ -336,4 +336,272 @@ class ScheduleServiceTest {
                 )
         );
     }
+
+    @Test
+    void getAllSchedules_shouldReturnOnlyAuthenticatedUsersSchedules() {
+
+        User user = mock(User.class);
+        when(user.getId()).thenReturn(1L);
+
+        User otherUser = mock(User.class);
+        when(otherUser.getId()).thenReturn(2L);
+
+        WorkoutTemplate template = mock(WorkoutTemplate.class);
+        when(template.getId()).thenReturn(3L);
+        when(template.getName()).thenReturn("Push Day");
+
+        Schedule ownSchedule = mock(Schedule.class);
+        when(ownSchedule.getId()).thenReturn(10L);
+        when(ownSchedule.getUser()).thenReturn(user);
+        when(ownSchedule.getWorkoutTemplate()).thenReturn(template);
+        when(ownSchedule.getScheduledDate())
+                .thenReturn(LocalDate.of(2026, 9, 10));
+        when(ownSchedule.getScheduledTime())
+                .thenReturn(LocalTime.of(18, 0));
+        when(ownSchedule.getNotes())
+                .thenReturn("Evening workout");
+        when(ownSchedule.getCreatedAt())
+                .thenReturn(null);
+
+        Schedule otherSchedule = mock(Schedule.class);
+        when(otherSchedule.getUser()).thenReturn(otherUser);
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("john");
+
+        when(userRepository.findByUsername("john"))
+                .thenReturn(Optional.of(user));
+
+        when(scheduleRepository.findAll())
+                .thenReturn(java.util.List.of(
+                        ownSchedule,
+                        otherSchedule
+                ));
+
+        var result =
+                scheduleService.getAllSchedules(authentication);
+
+        assertEquals(1, result.size());
+        assertEquals(10L, result.get(0).getId());
+        assertEquals(1L, result.get(0).getUserId());
+        assertEquals(3L, result.get(0).getWorkoutTemplateId());
+        assertEquals(
+                "Push Day",
+                result.get(0).getWorkoutTemplateName()
+        );
+    }
+
+    @Test
+    void createSchedule_shouldRejectMissingTemplate() {
+
+        User user = mock(User.class);
+
+        ScheduleRequest request = mock(ScheduleRequest.class);
+
+        when(request.getWorkoutTemplateId())
+                .thenReturn(999L);
+
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName())
+                .thenReturn("john");
+
+        when(userRepository.findByUsername("john"))
+                .thenReturn(Optional.of(user));
+
+        when(workoutTemplateRepository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> scheduleService.createSchedule(
+                        request,
+                        authentication
+                )
+        );
+    }
+
+    @Test
+    void updateSchedule_shouldUpdateScheduleSuccessfully() {
+
+        User user = mock(User.class);
+        when(user.getId()).thenReturn(1L);
+
+        WorkoutTemplate template = mock(WorkoutTemplate.class);
+        when(template.getId()).thenReturn(3L);
+        when(template.getUser()).thenReturn(user);
+        when(template.getName()).thenReturn("Updated Template");
+
+        Schedule schedule = mock(Schedule.class);
+        when(schedule.getId()).thenReturn(10L);
+        when(schedule.getUser()).thenReturn(user);
+        when(schedule.getWorkoutTemplate()).thenReturn(template);
+        when(schedule.getScheduledDate())
+                .thenReturn(LocalDate.of(2026, 9, 15));
+        when(schedule.getScheduledTime())
+                .thenReturn(LocalTime.of(19, 0));
+        when(schedule.getNotes())
+                .thenReturn("Updated notes");
+        when(schedule.getCreatedAt())
+                .thenReturn(null);
+
+        ScheduleRequest request = mock(ScheduleRequest.class);
+
+        when(request.getWorkoutTemplateId())
+                .thenReturn(3L);
+        when(request.getScheduledDate())
+                .thenReturn(LocalDate.of(2026, 9, 15));
+        when(request.getScheduledTime())
+                .thenReturn(LocalTime.of(19, 0));
+        when(request.getNotes())
+                .thenReturn("Updated notes");
+
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName())
+                .thenReturn("john");
+
+        when(userRepository.findByUsername("john"))
+                .thenReturn(Optional.of(user));
+
+        when(scheduleRepository.findById(10L))
+                .thenReturn(Optional.of(schedule));
+
+        when(workoutTemplateRepository.findById(3L))
+                .thenReturn(Optional.of(template));
+
+        when(scheduleRepository.save(schedule))
+                .thenReturn(schedule);
+
+        ScheduleResponse response =
+                scheduleService.updateSchedule(
+                        10L,
+                        request,
+                        authentication
+                );
+
+        verify(schedule).setWorkoutTemplate(template);
+        verify(schedule).setScheduledDate(
+                LocalDate.of(2026, 9, 15)
+        );
+        verify(schedule).setScheduledTime(
+                LocalTime.of(19, 0)
+        );
+        verify(schedule).setNotes("Updated notes");
+
+        verify(scheduleRepository).save(schedule);
+
+        assertEquals(10L, response.getId());
+        assertEquals(
+                "Updated Template",
+                response.getWorkoutTemplateName()
+        );
+    }
+
+    @Test
+    void updateSchedule_shouldRejectMissingTemplate() {
+
+        User user = mock(User.class);
+
+        Schedule schedule = mock(Schedule.class);
+        when(schedule.getUser()).thenReturn(user);
+
+        ScheduleRequest request = mock(ScheduleRequest.class);
+
+        when(request.getWorkoutTemplateId())
+                .thenReturn(999L);
+
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName())
+                .thenReturn("john");
+
+        when(userRepository.findByUsername("john"))
+                .thenReturn(Optional.of(user));
+
+        when(scheduleRepository.findById(10L))
+                .thenReturn(Optional.of(schedule));
+
+        when(workoutTemplateRepository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> scheduleService.updateSchedule(
+                        10L,
+                        request,
+                        authentication
+                )
+        );
+    }
+
+    @Test
+    void updateSchedule_shouldRejectTemplateOwnedByAnotherUser() {
+
+        User user = mock(User.class);
+        when(user.getId()).thenReturn(1L);
+
+        User templateOwner = mock(User.class);
+        when(templateOwner.getId()).thenReturn(2L);
+
+        WorkoutTemplate template = mock(WorkoutTemplate.class);
+        when(template.getId()).thenReturn(3L);
+        when(template.getUser()).thenReturn(templateOwner);
+
+        Schedule schedule = mock(Schedule.class);
+        when(schedule.getUser()).thenReturn(user);
+
+        ScheduleRequest request = mock(ScheduleRequest.class);
+
+        when(request.getWorkoutTemplateId())
+                .thenReturn(3L);
+
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName())
+                .thenReturn("john");
+
+        when(userRepository.findByUsername("john"))
+                .thenReturn(Optional.of(user));
+
+        when(scheduleRepository.findById(10L))
+                .thenReturn(Optional.of(schedule));
+
+        when(workoutTemplateRepository.findById(3L))
+                .thenReturn(Optional.of(template));
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> scheduleService.updateSchedule(
+                        10L,
+                        request,
+                        authentication
+                )
+        );
+    }
+
+    @Test
+    void deleteSchedule_shouldRejectMissingSchedule() {
+
+        User user = mock(User.class);
+
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName())
+                .thenReturn("john");
+
+        when(userRepository.findByUsername("john"))
+                .thenReturn(Optional.of(user));
+
+        when(scheduleRepository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> scheduleService.deleteSchedule(
+                        999L,
+                        authentication
+                )
+        );
+    }
 }
