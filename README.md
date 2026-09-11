@@ -192,17 +192,42 @@ database.
 
 ## Roadmap
 
-Planned features include:
+Planned improvements include:
 
-* [x] Workout scheduling
-* [x] Workout history
-* [x] Unit tests
-* [x] Integration/API tests
-* [x] Dockerize the application
-* [x] CI/CD pipeline with GitHub Actions
-* [ ] Progress tracking
-* [ ] Health checks & monitoring
-* [ ] Production deployment
+### Testing & quality
+
+* [ ] Testcontainers with PostgreSQL
+
+### Production readiness
+
+* [x] Health checks & monitoring
+* [ ] Production logging
+* [ ] Production configuration
+
+### AWS deployment
+
+* [ ] Amazon RDS PostgreSQL
+* [ ] Amazon ECR
+* [ ] ECS Fargate
+* [ ] Application Load Balancer
+* [ ] HTTPS
+
+### CI/CD
+
+* [x] GitHub Actions CI
+* [ ] Automated Docker image build
+* [ ] GitHub Actions → AWS deployment
+* [ ] OIDC authentication between GitHub Actions and AWS
+
+### Performance
+
+* [ ] Redis caching
+
+### Documentation
+
+* [x] API documentation with OpenAPI/Swagger
+* [ ] Production architecture diagram
+* [ ] Deployment documentation
 
 ## Project Goals
 
@@ -216,7 +241,12 @@ This project focuses on practical backend development concepts including:
 * Database versioning with Flyway
 * Validation and error handling
 * API documentation
+* Automated testing
+* Integration testing with PostgreSQL
 * Containerized development
+* CI/CD automation
+* Cloud deployment with AWS
+* Production monitoring and health checks
 
 ---
 
