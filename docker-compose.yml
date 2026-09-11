@@ -26,6 +26,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: prod
       DB_HOST: postgres
       POSTGRES_DB: ${POSTGRES_DB:-gym_db}
       POSTGRES_USER: ${POSTGRES_USER:-gym}

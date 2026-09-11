@@ -202,7 +202,7 @@ Planned improvements include:
 
 * [x] Health checks & monitoring
 * [x] Production logging
-* [ ] Production configuration
+* [x] Production configuration
 
 ### AWS deployment
 
