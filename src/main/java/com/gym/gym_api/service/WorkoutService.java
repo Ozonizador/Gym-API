@@ -14,6 +14,8 @@ import com.gym.gym_api.repository.ExerciseRepository;
 import com.gym.gym_api.repository.UserRepository;
 import com.gym.gym_api.repository.WorkoutRepository;
 import com.gym.gym_api.repository.WorkoutTemplateRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,8 @@ public class WorkoutService {
     private final UserRepository userRepository;
     private final ExerciseRepository exerciseRepository;
     private final WorkoutTemplateRepository workoutTemplateRepository;
+    private static final Logger log =
+            LoggerFactory.getLogger(WorkoutService.class);
 
     public WorkoutService(
             WorkoutRepository workoutRepository,
@@ -119,6 +123,12 @@ public class WorkoutService {
 
         Workout savedWorkout = workoutRepository.save(workout);
 
+        log.info(
+                "Creating workout '{}' for user '{}'",
+                request.getName(),
+                authentication.getName()
+        );
+
         return toResponse(savedWorkout);
     }
 
@@ -190,6 +200,12 @@ public class WorkoutService {
     private void verifyOwnership(Workout workout, User user) {
 
         if (!workout.getUser().getId().equals(user.getId())) {
+            log.warn(
+                    "User '{}' attempted to access workout {} owned by another user",
+                    user.getUsername(),
+                    workout.getId()
+            );
+
             throw new ResourceNotFoundException(
                     "Workout not found: " + workout.getId()
             );
@@ -232,6 +248,11 @@ public class WorkoutService {
             User user
     ) {
         if (!template.getUser().getId().equals(user.getId())) {
+            log.warn(
+                    "User '{}' attempted to access workout template {} owned by another user",
+                    user.getUsername(),
+                    template.getId()
+            );
             throw new ResourceNotFoundException(
                     "Workout template not found: " + template.getId()
             );
@@ -312,6 +333,12 @@ public class WorkoutService {
         workout.setDurationSeconds((int) durationSeconds);
 
         Workout finishedWorkout = workoutRepository.save(workout);
+
+        log.info(
+                "Finishing workout {} for user '{}'",
+                id,
+                authentication.getName()
+        );
 
         return toResponse(finishedWorkout);
     }
