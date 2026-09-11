@@ -44,5 +44,11 @@ jobs:
           POSTGRES_DB: gym_db
           POSTGRES_USER: gym
           POSTGRES_PASSWORD: gym_password
-          JWT_SECRET: github-actions-test-secret-0123456789-abcdef0123456789
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: ./mvnw test
+
+      - name: Build application
+        run: ./mvnw package -DskipTests
+
+      - name: Build Docker image
+        run: docker build -t gym-api:latest .

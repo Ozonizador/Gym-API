@@ -204,7 +204,15 @@ Planned improvements include:
 * [x] Production logging
 * [x] Production configuration
 
-### AWS deployment
+### Cloud & deployment
+
+* [x] Dockerized application
+* [x] PostgreSQL container
+* [x] Automated Docker image build
+* [ ] Production architecture diagram
+* [ ] Deployment documentation
+
+### AWS deployment architecture
 
 * [ ] Amazon RDS PostgreSQL
 * [ ] Amazon ECR
@@ -215,7 +223,6 @@ Planned improvements include:
 ### CI/CD
 
 * [x] GitHub Actions CI
-* [ ] Automated Docker image build
 * [ ] GitHub Actions → AWS deployment
 * [ ] OIDC authentication between GitHub Actions and AWS
 
@@ -226,8 +233,6 @@ Planned improvements include:
 ### Documentation
 
 * [x] API documentation with OpenAPI/Swagger
-* [ ] Production architecture diagram
-* [ ] Deployment documentation
 
 ## Project Goals
 
