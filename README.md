@@ -196,7 +196,7 @@ Planned improvements include:
 
 ### Testing & quality
 
-* [ ] Testcontainers with PostgreSQL
+* [x] Testcontainers with PostgreSQL
 
 ### Production readiness
 
