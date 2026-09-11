@@ -87,6 +87,10 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
+                        // Health check
+                        .requestMatchers("/actuator/health")
+                        .permitAll()
+
                         // Everything else requires JWT
                         .anyRequest()
                         .authenticated()
