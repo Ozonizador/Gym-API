@@ -201,7 +201,7 @@ Planned improvements include:
 ### Production readiness
 
 * [x] Health checks & monitoring
-* [ ] Production logging
+* [x] Production logging
 * [ ] Production configuration
 
 ### AWS deployment
