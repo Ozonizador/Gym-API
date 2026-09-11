@@ -4,7 +4,7 @@ A RESTful backend API for managing exercises, workout templates, and workout ses
 PostgreSQL persistence.
 
 Built as a backend-focused project using **Java 21** and **Spring Boot**, with an emphasis on clean architecture, secure
-resource ownership, relational data modelling, and API documentation.
+resource ownership, relational data modelling, automated testing, containerization, CI/CD, and production readiness.
 
 ## Features
 
@@ -15,30 +15,40 @@ resource ownership, relational data modelling, and API documentation.
 * Exercise-to-muscle-group relationships
 * Reusable workout templates
 * Workout CRUD operations
+* Workout scheduling
+* Workout history with filtering and pagination
 * Automatic workout duration tracking
 * Workout completion tracking
 * PostgreSQL database with Flyway migrations
 * Bean Validation and centralized exception handling
 * OpenAPI / Swagger documentation
-* Dockerized PostgreSQL development environment
+* Health checks with Spring Boot Actuator
+* Production-oriented logging and configuration
+* Dockerized application and PostgreSQL
+* Automated testing with PostgreSQL Testcontainers
+* GitHub Actions CI
+* Automated Docker image builds
 
 ## Tech Stack
 
-| Technology        | Purpose                        |
-|-------------------|--------------------------------|
-| Java 21           | Programming language           |
-| Spring Boot       | Backend framework              |
-| Spring Web        | REST API                       |
-| Spring Data JPA   | Data access                    |
-| Hibernate         | ORM                            |
-| Spring Security   | Authentication & authorization |
-| JWT               | Stateless authentication       |
-| BCrypt            | Password hashing               |
-| PostgreSQL        | Relational database            |
-| Flyway            | Database migrations            |
-| OpenAPI / Swagger | API documentation              |
-| Maven             | Build & dependency management  |
-| Docker            | Database containerization      |
+| Technology           | Purpose                                 |
+|----------------------|-----------------------------------------|
+| Java 21              | Programming language                    |
+| Spring Boot          | Backend framework                       |
+| Spring Web           | REST API                                |
+| Spring Data JPA      | Data access                             |
+| Hibernate            | ORM                                     |
+| Spring Security      | Authentication & authorization          |
+| JWT                  | Stateless authentication                |
+| BCrypt               | Password hashing                        |
+| PostgreSQL           | Relational database                     |
+| Flyway               | Database migrations                     |
+| Testcontainers       | PostgreSQL integration testing          |
+| OpenAPI / Swagger    | API documentation                       |
+| Spring Boot Actuator | Health checks & monitoring              |
+| Maven                | Build & dependency management           |
+| Docker               | Application & database containerization |
+| GitHub Actions       | CI/CD automation                        |
 
 ## Architecture
 
@@ -56,6 +66,9 @@ PostgreSQL
 
 DTOs are used to separate the API layer from JPA entities, while centralized exception handling provides consistent API
 error responses.
+
+Authentication uses JWT tokens with Spring Security. Protected resources verify ownership before allowing users to
+access or modify their data.
 
 ## Workout Model
 
@@ -110,6 +123,8 @@ http://localhost:8090/v3/api-docs
 
 Swagger supports JWT authorization for testing protected endpoints.
 
+Swagger/OpenAPI is enabled in development and disabled in the production profile.
+
 ## Getting Started
 
 ### Prerequisites
@@ -126,13 +141,27 @@ git clone <repository-url>
 cd gym-api
 ```
 
-### 2. Start PostgreSQL
+### 2. Start the application
+
+The application and PostgreSQL database can be started using Docker Compose:
 
 ```bash
 docker compose up -d
 ```
 
-The development database runs on:
+This starts:
+
+```text
+gym-api
+    ↓
+Spring Boot API :8090
+
+gym-postgres
+    ↓
+PostgreSQL 18 :5432
+```
+
+The PostgreSQL development database uses:
 
 ```text
 Host: localhost
@@ -159,9 +188,9 @@ jwt.secret=${JWT_SECRET}
 
 Do not commit secrets to source control.
 
-### 4. Run the application
+### 4. Run the application locally
 
-Windows:
+Alternatively, the Spring Boot application can be started directly:
 
 ```powershell
 .\mvnw.cmd spring-boot:run
@@ -190,9 +219,146 @@ spring.jpa.hibernate.ddl-auto=validate
 This ensures that the JPA model matches the database schema without allowing Hibernate to automatically modify the
 database.
 
-## Roadmap
+## Testing
 
-Planned improvements include:
+The project contains both unit tests and integration tests.
+
+Unit tests use JUnit and Mockito.
+
+Integration tests use **Testcontainers with PostgreSQL**, allowing the test suite to run against a real PostgreSQL
+database rather than an in-memory database.
+
+Run the complete test suite with:
+
+```powershell
+.\mvnw.cmd clean test
+```
+
+## CI/CD
+
+GitHub Actions automatically validates the application on every push and pull request to `master`.
+
+The CI pipeline:
+
+1. Starts a PostgreSQL 18 service
+2. Runs the automated test suite
+3. Builds the Spring Boot application
+4. Builds the Docker image
+
+```text
+GitHub Push / Pull Request
+            ↓
+      GitHub Actions
+            ↓
+     PostgreSQL 18
+            ↓
+       Run Tests
+            ↓
+    Build Spring Boot JAR
+            ↓
+     Build Docker Image
+```
+
+Docker images are currently built for validation only and are not pushed to a container registry.
+
+The JWT secret used by CI is stored as a GitHub Actions repository secret.
+
+## Production Readiness
+
+The application includes several production-oriented features:
+
+* Health checks through Spring Boot Actuator
+* Production-specific configuration
+* Structured application logging
+* Environment-based configuration
+* JWT secret supplied through environment variables
+* Hibernate schema validation
+* Disabled Swagger/OpenAPI in the production profile
+* Stateless JWT-based authentication
+* Docker health checks for PostgreSQL
+
+The production profile can be activated with:
+
+```text
+SPRING_PROFILES_ACTIVE=prod
+```
+
+## Deployment
+
+### Current deployment
+
+The application is fully containerized using Docker.
+
+The local production-like setup consists of:
+
+```text
+Docker Compose
+    │
+    ├── Spring Boot API
+    │       └── Port 8090
+    │
+    └── PostgreSQL 18
+            └── Persistent Docker volume
+```
+
+### Planned AWS architecture
+
+The following represents the planned production architecture:
+
+```text
+                         Internet
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │ Application Load     │
+                 │ Balancer             │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │ ECS Fargate         │
+                 │ Spring Boot API     │
+                 │ Docker container    │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │ Amazon RDS           │
+                 │ PostgreSQL           │
+                 └─────────────────────┘
+
+
+GitHub
+   │
+   ▼
+GitHub Actions
+   │
+   ├── Run tests
+   ├── Build application
+   ├── Build Docker image
+   │
+   ▼
+Amazon ECR
+   │
+   ▼
+ECS Fargate
+```
+
+The AWS architecture is currently documented as a **reference architecture** and has not been provisioned.
+
+The planned AWS environment would use:
+
+* **Amazon ECR** for Docker image storage
+* **ECS Fargate** for running the Spring Boot container
+* **Application Load Balancer** for HTTP/HTTPS traffic
+* **Amazon RDS PostgreSQL** for the production database
+* **HTTPS** for encrypted client communication
+* **GitHub Actions** for CI/CD automation
+* **OIDC** for secure GitHub Actions authentication with AWS
+
+No AWS infrastructure is currently required to run or develop the application.
+
+## Roadmap
 
 ### Testing & quality
 
@@ -210,7 +376,7 @@ Planned improvements include:
 * [x] PostgreSQL container
 * [x] Automated Docker image build
 * [ ] Production architecture diagram
-* [ ] Deployment documentation
+* [x] Deployment documentation
 
 ### AWS deployment architecture
 
@@ -250,9 +416,9 @@ This project focuses on practical backend development concepts including:
 * Integration testing with PostgreSQL
 * Containerized development
 * CI/CD automation
-* Cloud deployment with AWS
 * Production monitoring and health checks
+* AWS deployment architecture
 
 ---
 
-**Status:** In active development
+**Status:** Active development
