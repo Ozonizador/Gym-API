@@ -1,5 +1,6 @@
 package com.gym.gym_api.security;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,44 +54,47 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        String username;
+
         try {
-            String username = jwtService.extractUsername(token);
-
-            if (SecurityContextHolder
-                    .getContext()
-                    .getAuthentication() == null) {
-
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(username);
-
-                if (!jwtService.isTokenValid(token, username)) {
-                    sendUnauthorized(response, "Invalid or expired token");
-                    return;
-                }
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request)
-                );
-
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authentication);
-            }
-
-            filterChain.doFilter(request, response);
-
-        } catch (Exception exception) {
+            username = jwtService.extractUsername(token);
+        } catch (JwtException | IllegalArgumentException exception) {
             SecurityContextHolder.clearContext();
             sendUnauthorized(response, "Invalid or expired token");
+            return;
         }
+
+        if (!jwtService.isTokenValid(token, username)) {
+            SecurityContextHolder.clearContext();
+            sendUnauthorized(response, "Invalid or expired token");
+            return;
+        }
+
+        if (SecurityContextHolder
+                .getContext()
+                .getAuthentication() == null) {
+
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(username);
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource()
+                            .buildDetails(request)
+            );
+
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(authentication);
+        }
+
+        filterChain.doFilter(request, response);
     }
 
     private void sendUnauthorized(
